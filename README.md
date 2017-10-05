@@ -14,3 +14,6 @@ Modul Laporan Perjalanan Dinas, terdapat 2 sub menu yaitu Inpur Laproan Perjalan
 1.	Membuat automatis Surat Perjalanan Dinas ke PDF
 1.	Membuat Laporan Perjalanan Dinas
 1.	Mengenerate Laporan Perjalanan Dinas ke PDF
+
+## Notice 
+Database File contact me : erlanggawijaya17@gmail.com
