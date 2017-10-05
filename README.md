@@ -7,7 +7,7 @@ Modul Perjalanan dinas terdapat 2 sub menu yaitu Input Data Perjalanan Dinas, da
 
 Modul Laporan Perjalanan Dinas, terdapat 2 sub menu yaitu Inpur Laproan Perjalanan Dinas dan Lihat Data Laporan Perjalanan Dinas. Fitur didalamnya yaitu bisa mengenerate Laporan Perjalan Dinas yang sudah dibuat. Dan Fitur lainnya seperti inpur data laporan perjalanan dinas, edit data, dan hapus data.
 
-*	Fungsi Aplikasi Perjalanan Dinas :
+*	## Fungsi Aplikasi Perjalanan Dinas :
 1.	Mengelola Data Pegawai
 1.	Mengelola Data Perjalanan Dinas
 1.	Membuat automatis Surat Perintah ke PDF
