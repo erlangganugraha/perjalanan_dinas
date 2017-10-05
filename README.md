@@ -1,6 +1,6 @@
 # Aplikasi Perjalanan Dinas
 
-![Logo] (https://github.com/erlangganugraha/perjalanan_dinas/blob/master/images/ss.png?raw=true)
+![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
 
 Aplikasi Perjalanan Dinas merupakan aplikasi berbasis web dimana didalam aplikasi ini terdapat 3 modul. Diantaranya Modul Pegawai, Perjalanan Dinas, dan Laporan Perjalanan Dinas.
 
