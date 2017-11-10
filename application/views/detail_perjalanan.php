@@ -34,8 +34,12 @@
               $tingkat_biaya = $d->tingkat_biaya;
               $tempat_berangkat = $d->tempat_berangkat;
               $tempat_tujuan = $d->tempat_tujuan;
-              $tgl_berangkat = $d->tgl_berangkat;
-              $tgl_kembali = $d->tgl_kembali;
+              $tgl_b = $d->tgl_berangkat;
+              $tgl_berangkat = date("d/M/Y", strtotime($tgl_b));
+
+              $tgl_k = $d->tgl_kembali;
+              $tgl_kembali = date("d/M/Y", strtotime($tgl_k));
+
               $alat_angkut = $d->alat_angkut;
             }
            ?>

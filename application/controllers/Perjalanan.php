@@ -56,11 +56,13 @@ class Perjalanan extends CI_Controller {
 			$ganda = $this->model->getDataGanda($id,$this->input->post('txtTglBerangkat'),$this->input->post('txtTglKembali'));
 			$list = "";
 			foreach ($ganda as $k) {
-				$list = $list." ".$k->nama.",";
+				$list = $list." ".$k->nama."\\n";
 			}
 			$list = rtrim($list, ",");
 
-			echo "<script>alert('".$list." ditanggal tersebut sedang ada penugasan');</script>";
+			$message = $list. "\\n Ditanggal tersebut sedang ada penugasan";
+
+			echo "<script>alert('".$message."');</script>";
 	    	echo "<script>document.location.href = '".base_url()."perjalanan/add';</script>";
 		}
 		elseif($simpan == "berhasil"){

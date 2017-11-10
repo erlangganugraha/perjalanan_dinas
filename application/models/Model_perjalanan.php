@@ -128,7 +128,7 @@ Class Model_perjalanan extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('pelaksana');
 		$this->db->where("nip IN ($nip)");
-		$this->db->where("tgl_berangkat BETWEEN '$minvalue' AND '$maxvalue'");
+		$this->db->where("tgl_kembali BETWEEN '$minvalue' AND '$maxvalue'");
 		$query = $this->db->get();
 		if($query->num_rows()> 0 ){
 			$hasil = "ada";
@@ -140,11 +140,11 @@ Class Model_perjalanan extends CI_Model {
 
 	function getDataGanda($nip, $minvalue, $maxvalue){
 		//$nip = array("19580815 198303 1 020", "19620523 198603 1 005", "19610523 198203 1 005", "19620418 199003 2 005");
-		
+		$data = "";
 		$this->db->select('*, pegawai.nama');
 		$this->db->from('pelaksana');
 		$this->db->where("pelaksana.nip IN ($nip)");
-		$this->db->where("tgl_berangkat BETWEEN '$minvalue' AND '$maxvalue'");
+		$this->db->where("tgl_kembali BETWEEN '$minvalue' AND '$maxvalue'");
 		$this->db->join('pegawai', 'pegawai.nip = pelaksana.nip');
 		$query = $this->db->get();
 		if($query->num_rows()> 0 ){

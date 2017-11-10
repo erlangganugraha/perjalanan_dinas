@@ -10,7 +10,7 @@ class Pegawai extends CI_Controller {
 		endif;
 	    $this->load->model('model_pegawai','model');       
     }
-
+    
     public function laporan_pdf(){
 	    $data = array(
 	        "dataku" => array(

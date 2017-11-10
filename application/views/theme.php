@@ -29,7 +29,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="<?=base_url();?>assets/dist/css/skins/skin-purple.min.css">
 
   <!-- jQuery 3 -->
-  <script src="<?=base_url();?>assets/jquery/dist/jquery.min.js"></script>
+  <script src="<?=base_url();?>assets/dist/js/jquery.min.js"></script>
   <!-- Bootstrap 3.3.7 -->
   <script src="<?=base_url();?>assets/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -202,6 +202,14 @@ desired effect
 
 <script>
   $(function () {
+    /*CKEDITOR.replace('editor1');
+    CKEDITOR.replace('editor2');*/
+    CKEDITOR.replace('editor1');
+    CKEDITOR.replace('editor2');
+
+    //Date picker
+    $('.datepicker').datepicker({autoclose:true, format: "yyyy-mm-dd"});
+
     //$('#example1').DataTable()
     $('.nameTable').DataTable({
       'paging'      : true,
@@ -222,14 +230,7 @@ desired effect
       'scrollY'     : 200
     });
 
-    /*CKEDITOR.replace('editor1');
-    CKEDITOR.replace('editor2');*/
 
-    //Date picker
-    $('.datepicker').datepicker({autoclose:true, format: "yyyy-mm-dd"});
-
-    CKEDITOR.replace('editor1');
-    CKEDITOR.replace('editor2');
     
   })
 </script>
