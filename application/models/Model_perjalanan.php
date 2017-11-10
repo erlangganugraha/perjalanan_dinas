@@ -127,8 +127,7 @@ Class Model_perjalanan extends CI_Model {
 		
 		$this->db->select('*');
 		$this->db->from('pelaksana');
-		$this->db->where("nip IN ($nip)");
-		$this->db->where("(tgl_kembali BETWEEN '$minvalue' AND '$maxvalue') OR (tgl_berangkat BETWEEN '$minvalue' AND '$maxvalue')");
+		$this->db->where("((pelaksana.nip IN ($nip))) AND ((tgl_kembali BETWEEN '$minvalue' AND '$maxvalue') OR (tgl_berangkat BETWEEN '$minvalue' AND '$maxvalue'))");
 		$query = $this->db->get();
 		if($query->num_rows()> 0 ){
 			$hasil = "ada";
