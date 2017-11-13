@@ -44,23 +44,42 @@ class Perjalanan extends CI_Controller {
  		$this->load->view('theme', $data);
 	}
 
+	public function test1()
+	{
+		$tgl = "";
+		$tgl_mulai = '2017-11-02';
+		$tgl_akhir = '2017-11-03';
+		$tgl_tambah = date('Y-m-d', strtotime($tgl_mulai. ' - 1 days'));
+		
+		for ($i=$tgl_mulai; $i <= $tgl_akhir ; $i++) {
+			$tgl_tambah = date('Y-m-d', strtotime($tgl_tambah. ' + 1 days'));
+			$tgl = $tgl.$tgl_tambah.", ";
+		}
+
+		$tgl = rtrim($tgl, ", ");
+		echo $tgl;
+	}
+
+	/*function test2(){
+		echo $this->model->getDataTgl("19580815 198303 1 020 , 19581012 198503 1 008", "2017-11-02", "2017-11-04");
+	}*/
+
 	public function exeAdd(){
 		$simpan = $this->model->insertData();
 		if($simpan == "gandatugas"){
-			$id= "";
+			/*$id= "";
 			foreach($this->input->post('txtPelaksana') as $nip) {
 		    	$id = $id."'".$nip."',";
 	    	}
-
-			$id = rtrim($id, ",");
-			$ganda = $this->model->getDataGanda($id,$this->input->post('txtTglBerangkat'),$this->input->post('txtTglKembali'));
+			
+			$id = rtrim($id, ",");*/
 			$list = "";
-			foreach ($ganda as $k) {
-				$list = $list." ".$k->nama."\\n";
+			$ganda = $this->model->getDataTgl($this->input->post('txtTglBerangkat'), $this->input->post('txtTglKembali'));
+			foreach ($ganda['nama'] as $key) {
+				$list = $list.$key."\\n";
 			}
-			$list = rtrim($list, ",");
 
-			$message = $list. "\\n Ditanggal tersebut sedang ada penugasan";
+			$message = $list. "Ditanggal tersebut sedang ada penugasan";
 
 			echo "<script>alert('".$message."');</script>";
 	    	echo "<script>document.location.href = '".base_url()."perjalanan/add';</script>";
@@ -95,6 +114,16 @@ class Perjalanan extends CI_Controller {
 		if($edit == "berhasil"){
 			echo "<script>alert('Berhasil diubah');</script>";
 			echo "<script>document.location.href = '".base_url()."perjalanan/index';</script>";
+		}elseif($edit=="gandatugas"){
+			$ganda = $this->model->cekEditDataTgl($this->input->post('txtTglBerangkat'), $this->input->post('txtTglKembali'));
+			foreach ($ganda['nama'] as $key) {
+				$list = $list.$key."\\n";
+			}
+
+			$message = $list. "Ditanggal tersebut sedang ada penugasan";
+			$id = $this->uri->segment(3);
+			echo "<script>alert('".$message."');</script>";
+	    	echo "<script>document.location.href = '".base_url()."perjalanan/edit/".$id."';</script>";
 		}
 	}
 

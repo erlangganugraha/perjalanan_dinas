@@ -37,9 +37,9 @@ Class Model_perjalanan extends CI_Model {
 		   'alat_angkut' => $this->input->post('txtAlatAngkut'),
 		   'tgl_input' => date('Y-m-d')
 		);
-		 
+
 		$id= "";
-		$id_perjalanan = $this->getIdPerjalanan();
+		/*$id_perjalanan = $this->getIdPerjalanan();
 		foreach($this->input->post('txtPelaksana') as $nip) {
         $d[] = array('id_perjalanan' => $id_perjalanan,
         	'nip' => $nip,
@@ -47,9 +47,11 @@ Class Model_perjalanan extends CI_Model {
     	$id = $id."'".$nip."',";
     	}
 
-		$id = rtrim($id, ",");
-		$cek = $this->getDataTgl($id,$this->input->post('txtTglBerangkat'),$this->input->post('txtTglKembali'));
-    	if($cek == "ada"){
+		$id = rtrim($id, ",");*/
+		 
+		$cek = $this->getDataTgl($this->input->post('txtTglBerangkat'), $this->input->post('txtTglKembali'));
+
+    	if($cek['status'] == "ada"){
     		$result = "gandatugas";
     	}else{
     		$simpan = $this->db->insert('perjalanan', $data);
@@ -106,29 +108,50 @@ Class Model_perjalanan extends CI_Model {
 		$tgl_berangkat = $this->input->post('txtTglBerangkat');
 		$tgl_kembali = $this->input->post('txtTglKembali');
 
-		$this->db->where("id_perjalanan", $this->uri->segment(3));
-		$exe = $this->db->update('perjalanan', $data);
+		//$cek = $this->cekEditDataTgl($this->input->post('txtTglBerangkat'), $this->input->post('txtTglKembali'));
 
-		$id = $this->uri->segment(3);
+		$cek['status'] = "";
+		if($cek['status']=="ada"){
+			$result = "gandatugas";
+		}else{
+			$this->db->where("id_perjalanan", $this->uri->segment(3));
+			$exe = $this->db->update('perjalanan', $data);
 
-		$exe2 = $this->db->query(
-			"UPDATE `pelaksana` SET `tgl_berangkat`='$tgl_berangkat',`tgl_kembali`='$tgl_kembali' WHERE id_perjalanan = '$id'"
-		);
-		if($exe && $exe2){
-			$result = "berhasil";
+			$id = $this->uri->segment(3);
+
+			$exe2 = $this->db->query(
+				"UPDATE `pelaksana` SET `tgl_berangkat`='$tgl_berangkat',`tgl_kembali`='$tgl_kembali' WHERE id_perjalanan = '$id'"
+			);
+			if($exe && $exe2){
+				$result = "berhasil";
+			}
 		}
+
+		
 		
 
 		return $result;
 	}
+	
+	function cekPelaksana($id){
 
-	function getDataTgl($nip, $minvalue, $maxvalue){
-		//$nip = array("19580815 198303 1 020", "19620523 198603 1 005", "19610523 198203 1 005", "19620418 199003 2 005");
+		$getData = $this->db->query("SELECT * FROM pelaksana WHERE (nip IN($id)) ORDER BY tgl_berangkat ASC LIMIT 1");
+		$row = $getData->row();
+
+		$tgl = "";
+		$tgl_mulai = $row->tgl_berangkat;
+		$tgl_akhir = $this->input->post('txtTglKembali');
+		$tgl_tambah = date('Y-m-d', strtotime($tgl_mulai. ' - 1 days'));
 		
-		$this->db->select('*');
-		$this->db->from('pelaksana');
-		$this->db->where("((pelaksana.nip IN ($nip))) AND ((tgl_kembali BETWEEN '$minvalue' AND '$maxvalue') OR (tgl_berangkat BETWEEN '$minvalue' AND '$maxvalue'))");
-		$query = $this->db->get();
+		for ($i=$tgl_mulai; $i <= $tgl_akhir ; $i++) {
+			$tgl_tambah = date('Y-m-d', strtotime($tgl_tambah. ' + 1 days'));
+			$tgl = $tgl.$tgl_tambah.", ";
+		}
+
+		$tgl = rtrim($tgl, ", ");
+
+		$query = $this->db->query("SELECT * FROM pelaksana WHERE (nip IN($id)) AND (tgl_kembali IN ($tgl) OR tgl_berangkat IN($tgl))");
+
 		if($query->num_rows()> 0 ){
 			$hasil = "ada";
 		}else{
@@ -137,12 +160,151 @@ Class Model_perjalanan extends CI_Model {
 		return $hasil;
 	}
 
+
+	function dataPelaksana(){
+		$id= "";
+		$id_perjalanan = $this->getIdPerjalanan();
+		foreach($this->input->post('txtPelaksana') as $nip) {
+        $d[] = array('id_perjalanan' => $id_perjalanan,
+        	'nip' => $nip,
+        	);
+    	$id = $id."'".$nip."',";
+    	}
+
+		$id = rtrim($id, ",");
+
+		$tgl = rtrim($tgl, ", ");
+
+		$query = $this->db->query("SELECT * FROM pelaksana WHERE (nip IN($id))");
+
+		if($query->num_rows()> 0 ){
+			$data = $query->result();
+		}
+		return $data;
+
+	}
+
+	function cekEditDataTgl($tgl_berangkat, $tgl_kembali){
+		$nama = array();
+		$status = "";
+		$id_perjalanan = $this->uri->segment(3);
+		$edit = $this->db->query("SELECT * FROM pelaksana WHERE id_perjalanan = '$id_perjalanan'");
+
+		foreach($edit->result() as $k) {
+		$nip = $k->nip;
+		$query = $this->db->query("SELECT * FROM pelaksana WHERE nip =  '$nip'");
+			foreach($query->result() as $v){
+				$colTglBerangkat = $v->tgl_berangkat;
+				$colTglKembali = $v->tgl_kembali;
+				
+				
+				if (!($tgl_berangkat > $colTglKembali && $tgl_kembali > $colTglBerangkat)  || ($tgl_berangkat < $colTglKembali && $tgl_kembali < $colTglBerangkat) || ($tgl_berangkat != $colTglBerangkat && $tgl_kembali != $colTglKembali) ) {
+					$status = "ada";
+					//$nip = $nip.$v->nip.", ";
+					$id = $v->nip;
+					$sql = $this->db->query("SELECT nama FROM pelaksana JOIN pegawai ON pegawai.nip = pelaksana.nip
+						WHERE pelaksana.nip = '$id'
+					")->row();
+					$nama[] = $sql->nama;
+				}else{
+					$status = "tidakada";
+					$nama = "";
+				}
+			}
+		}
+
+		//print_r($query->result());
+		//echo "<script>alert('".$nama."')</script>";
+		//echo $nip;
+		$return =  array('status'=>$status, 'nama'=>$nama);
+		return $return;
+	}
+
+	function getDataTgl($tgl_berangkat, $tgl_kembali){
+		//$nip = array("19580815 198303 1 020", "19620523 198603 1 005", "19610523 198203 1 005", "19620418 199003 2 005");
+
+
+		/*$bentrok = "BENTROK";
+		for ($i=0; $i<sizeof($_POST["pelaksana"]); $i++){
+			$pelaksana = $_POST["pelaksana"][$i];
+			$cek = mysql_query("select * from surat where pelaksana like '%$pelaksana%'");
+			while ($suratpelaksana = mysql_fetch_row($cek)){
+				if (((date("d-m-Y", strtotime($tgl_berangkat)) > date("d-m-Y", strtotime($colTglKembali))) && ($tgl_kembali > $colTglBerangkat)) || ((date("d-m-Y", strtotime($tgl_berangkat)) < date("d-m-Y", strtotime($colTglKembali))) && ($tgl_kembali < $colTglBerangkat))) {
+				} else {
+					$bentrok = $bentrok.'-'.$i.':'.$suratpelaksana[0];
+				}	
+			}
+		}*/
+
+		/*
+
+		((date("d-m-Y", strtotime($tgl_berangkat)) >= date("d-m-Y", strtotime($colTglKembali))) && ($tgl_kembali >= $colTglBerangkat)) 
+				||
+				((date("d-m-Y", strtotime($tgl_berangkat)) <= date("d-m-Y", strtotime($colTglKembali))) && ($tgl_kembali <= $colTglBerangkat))
+		*/
+
+		$nama = array();
+		$status = "";
+		foreach($this->input->post('txtPelaksana') as $nip) {
+		$query = $this->db->query("SELECT * FROM pelaksana WHERE nip =  '$nip'");
+			foreach($query->result() as $v){
+				$colTglBerangkat = $v->tgl_berangkat;
+				$colTglKembali = $v->tgl_kembali;
+				
+				
+				if (!($tgl_berangkat > $colTglKembali && $tgl_kembali > $colTglBerangkat)  || ($tgl_berangkat < $colTglKembali && $tgl_kembali < $colTglBerangkat)) {
+					$status = "ada";
+					//$nip = $nip.$v->nip.", ";
+					$id = $v->nip;
+					$sql = $this->db->query("SELECT nama FROM pelaksana JOIN pegawai ON pegawai.nip = pelaksana.nip
+						WHERE pelaksana.nip = '$id'
+					")->row();
+					$nama[] = $sql->nama;
+				}else{
+					$status = "tidakada";
+					$nama = "";
+				}
+			}
+		}
+
+		//print_r($query->result());
+		//echo "<script>alert('".$nama."')</script>";
+		//echo $nip;
+		$return =  array('status'=>$status, 'nama'=>$nama);
+		return $return;
+		/*
+
+		$row = $this->db->query("SELECT tgl_kembali, tgl_berangkat, nip FROM pelaksana WHERE nip IN($nip) ORDER BY tgl_berangkat ASC LIMIT 1")->row();
+		if(!empty($row)){
+			$txtTglBerangkat = $row->tgl_berangkat;
+			//echo "<script>alert('$txtTglBerangkat')</script>";
+			$txtTglKembali = $tgl_kembali;
+		}else{
+			$txtTglBerangkat = "";
+			//echo "<script>alert('$txtTglBerangkat')</script>";
+			$txtTglKembali = "";
+		}
+		
+		
+		$query = $this->db->query(
+			"SELECT * FROM pelaksana WHERE (nip IN($nip)) AND ((tgl_berangkat BETWEEN '$txtTglBerangkat' AND '$tgl_kembali' ))"
+			
+		);
+		if($query->num_rows()> 0 ){
+			$hasil = "ada";
+		}else{
+			$hasil = "tidakada";
+		}
+
+		return $hasil;*/
+	}
+
 	function getDataGanda($nip, $minvalue, $maxvalue){
 		//$nip = array("19580815 198303 1 020", "19620523 198603 1 005", "19610523 198203 1 005", "19620418 199003 2 005");
 		$data = "";
 		$this->db->select('*, pegawai.nama');
 		$this->db->from('pelaksana');
-		$this->db->where("((pelaksana.nip IN ($nip))) AND ((tgl_kembali BETWEEN '$minvalue' AND '$maxvalue') OR (tgl_berangkat BETWEEN '$minvalue' AND '$maxvalue'))");
+		$this->db->where("pelaksana.nip IN ($nip)");
 		$this->db->join('pegawai', 'pegawai.nip = pelaksana.nip');
 		$query = $this->db->get();
 		if($query->num_rows()> 0 ){

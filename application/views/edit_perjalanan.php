@@ -93,7 +93,7 @@
                   </div>
                 </div>
 
-                <div class="form-group">
+                <!--<div class="form-group">
                   <label class="col-md-2 control-label">Tanggal Berangkat :</label>
                   <div class="col-md-3">
                     <input type="date" class="form-control datepicker" name="txtTglBerangkat" required="" value="<?=$tgl_berangkat;?>">
@@ -102,7 +102,7 @@
                   <div class="col-md-3">
                     <input type="date" class="form-control datepicker" name="txtTglKembali" required="" value="<?=$tgl_kembali;?>">
                   </div>
-                </div>
+                </div>-->
 
                 <div class="form-group">
                   <label class="col-md-2 control-label">Tingkat Biaya :</label>

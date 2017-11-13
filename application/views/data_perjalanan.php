@@ -84,11 +84,11 @@
                       </ul>
                     </div>
 
-                  <a class="btn btn-success btn-sm" href="<?=base_url();?>Perjalanan/detail/<?=$v->id_perjalanan;?>" title="Detail Data"> <i class="glyphicon glyphicon-list"></i> Detail</a> 
+                  <a class="btn btn-success btn-sm" href="<?=base_url();?>perjalanan/detail/<?=$v->id_perjalanan;?>" title="Detail Data"> <i class="glyphicon glyphicon-list"></i> Detail</a> 
 
-                  <a class="btn btn-danger btn-sm" href="<?=base_url();?>Perjalanan/edit/<?=$v->id_perjalanan;?>" title="Detail Data"> <i class="glyphicon glyphicon-pencil"></i> Edit</a> 
+                  <a class="btn btn-danger btn-sm" href="<?=base_url();?>perjalanan/edit/<?=$v->id_perjalanan;?>" title="Detail Data"> <i class="glyphicon glyphicon-pencil"></i> Edit</a> 
 
-                  <a class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini ?')" href="<?=base_url();?>Perjalanan/exeDelete/<?=$v->id_perjalanan;?>" title="Hapus Data"><i class="fa fa-remove"></i> Hapus</a></td>
+                  <a class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini ?')" href="<?=base_url();?>perjalanan/exeDelete/<?=$v->id_perjalanan;?>" title="Hapus Data"><i class="fa fa-remove"></i> Hapus</a></td>
                 </tr>
 
                 <?php } ?>
